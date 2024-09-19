@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">University DataTable</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <button style="margin-bottom: 20px;" id="modalButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-default" data-tooltip="tooltip" data-placement="top" title="Add Data">
+                            <i class="fas fa-plus"></i>
+                        </button>
+
+                        <div class="modal fade" id="modal-default">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">University Modal</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="univForm">
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label for="univName">University Name</label>
+                                                    <input type="text" name="univName" class="form-control" id="univName" placeholder="Enter University Name" required>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <div>
+                                            <button id="modalEdit" type="button" class="btn btn-warning">Edit</button>
+                                            <button id="modalAdd" type="button" form="univForm" class="btn btn-primary" onclick="addUniv()">Simpan</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+
+                        <table id="univTable" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>University ID</th>
+                                    <th>University Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
+@section Script {
+    <script src="~/Script/UniversityScript.js"></script>
+}

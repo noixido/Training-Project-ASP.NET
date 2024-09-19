@@ -1,0 +1,116 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Employee DataTable</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <button style="margin-bottom: 20px;" id="modalButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-default" data-tooltip="tooltip" data-placement="top" title="Add Data">
+                            <i class="fas fa-plus"></i>
+                        </button>
+
+                        <div class="modal fade" id="modal-default">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Register Modal</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="univForm">
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label for="firstName">First Name</label>
+                                                    <input type="text" name="firstName" class="form-control" id="firstName" placeholder="Enter Your First Name">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="lastName">Last Name</label>
+                                                    <input type="text" name="lastName" class="form-control" id="lastName" placeholder="Enter Your Last Name">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="phone">Phone Number</label>
+                                                    <input type="text" name="phone" class="form-control" id="phone" placeholder="Enter Your Phone Number">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="birthDate">Birth Date</label>
+                                                    <input type="date" name="birthDate" class="form-control" id="birtDate" placeholder="Enter Your Birth Date">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="email">email</label>
+                                                    <input type="email" name="email" class="form-control" id="email" placeholder="Enter Your Email">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Degree">Degree</label>
+                                                    <select class="form-control" id="degree">
+                                                        <option value="D3">D3</option>
+                                                        <option value="D4">D4</option>
+                                                        <option value="S1">S1</option>
+                                                        <option value="S2">S2</option>
+                                                        <option value="S3">S3</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="gpa">GPA</label>
+                                                    <input type="number" name="gpa" class="form-control" id="gpa" placeholder="Enter Your GPA" min="0" max="4">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="univ">University</label>
+                                                    <select class="form-control" id="university"></select>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <div>
+                                            <button id="modalEdit" type="button" class="btn btn-warning">Edit</button>
+                                            <button id="modalAdd" type="button" class="btn btn-primary" onclick="addUniv()">Simpan</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+
+                        <table id="empTable" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>NIK</th>
+                                    <th>Fullname</th>
+                                    <th>Phone</th>
+                                    <th>Birth Date</th>
+                                    <th>Email</th>
+                                    <th>Degree</th>
+                                    <th>GPA</th>
+                                    <th>University Name</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
+@section Script {
+    <script src="~/Script/RegisterScript.js"></script>
+}

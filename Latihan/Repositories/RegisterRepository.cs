@@ -58,7 +58,6 @@ namespace Latihan.Repositories
                 Degree = lastEduInserted.Degree.ToString(),
                 GPA = lastEduInserted.GPA,
                 Univ_Id = lastEduInserted.University_Id
-
             };
         }
 

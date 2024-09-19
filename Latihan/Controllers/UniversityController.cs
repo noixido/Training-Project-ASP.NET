@@ -1,11 +1,13 @@
 ﻿using Latihan.Models;
 using Latihan.Repositories;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Latihan.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowOrigin")]
     public class UniversityController : Controller
     {
         private UniversityRepository _universityRepository;
