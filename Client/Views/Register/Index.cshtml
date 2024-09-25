@@ -37,11 +37,11 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form id="univForm">
+                                        <form id="empForm">
                                             <div class="card-body">
                                                 <div class="form-group">
                                                     <label for="firstName">First Name</label>
-                                                    <input type="text" name="firstName" class="form-control" id="firstName" placeholder="Enter Your First Name">
+                                                    <input type="text" name="firstName" class="form-control" id="firstName" placeholder="Enter Your First Name" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="lastName">Last Name</label>
@@ -61,7 +61,8 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="Degree">Degree</label>
-                                                    <select class="form-control" id="degree">
+                                                    <select class="form-control select2bs4" style="width: 100%;" id="degree" name="degree">
+                                                        <option value="" selected disabled>== Select Degree ==</option>
                                                         <option value="D3">D3</option>
                                                         <option value="D4">D4</option>
                                                         <option value="S1">S1</option>
@@ -75,7 +76,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="univ">University</label>
-                                                    <select class="form-control" id="university"></select>
+                                                    <select class="form-control select2bs4" style="width: 100%;" id="university" name="university"></select>
                                                 </div>
                                             </div>
                                         </form>
@@ -83,8 +84,7 @@
                                     <div class="modal-footer justify-content-between">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                         <div>
-                                            <button id="modalEdit" type="button" class="btn btn-warning">Edit</button>
-                                            <button id="modalAdd" type="button" class="btn btn-primary" onclick="addUniv()">Simpan</button>
+                                            <button id="modalAdd" type="submit" form="empForm" class="btn btn-primary" onclick="addEmp()">Simpan</button>
                                         </div>
                                     </div>
                                 </div>

@@ -1,4 +1,95 @@
-﻿$(document).ready(function () {
+﻿$('[data-tooltip="tooltip"]').tooltip({ trigger: "hover" });
+
+document.getElementById('modalButton').addEventListener('click', function () {
+    $('#empForm').find('.is-invalid').removeClass('is-invalid');
+    $("#empForm").trigger('reset');
+    $('#empForm').find('.select2bs4').val(null).trigger('change');
+});
+
+$(function () {
+    $.validator.setDefaults({
+        submitHandler: function (e) {
+            $("#empForm").submit(function (e) {
+                e.preventDefault();
+            });
+        }
+    });
+    $('#empForm').validate({
+        rules: {
+            firstName: {
+                required: true,
+            },
+            lastName: {
+                required: true,
+            },
+            phone: {
+                required: true,
+                range: [3, 15]
+            },
+            birthDate: {
+                required: true,
+            },
+            email: {
+                required: true,
+                email: true
+            },
+            degree: {
+                required: true,
+            },
+            gpa: {
+                required: true,
+                number: true,
+                range: [0, 4]
+            },
+            university: {
+                required: true,
+            },
+        },
+        messages: {
+            firstName: {
+                required: "First Name is required!",
+            },
+            lastName: {
+                required: "Last Name is required!",
+            },
+            phone: {
+                required: "Phone Number is required!",
+                range: "Please enter a Phone number between 3 digits and 15 digits!"
+            },
+            birthDate: {
+                required: "Birth Date is required!",
+            },
+            email: {
+                required: "Email is required!",
+                email: "Please enter a valid Email!"
+            },
+            degree: {
+                required: "Degree is required!",
+            },
+            gpa: {
+                required: "GPA is required!",
+                number: "GPA must be a number!",
+                range: "GPA must be from 0 to 4! Comma number is allowed"
+            },
+            university: {
+                required: "University is required!",
+            },
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('invalid-feedback');
+            element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        }
+    });
+});
+
+$(document).ready(function () {
     $('#empTable').DataTable({
         "paging": true,
         "responsive": true,
@@ -37,7 +128,7 @@
     });
 });
 
-function addUniv(){
+function addEmp(){
     var reg = new Object();
     reg.firstName = $('#firstName').val();
     reg.lastName = $('#lastName').val();
@@ -77,7 +168,7 @@ $(document).ready(function () {
         dataType: "json",
     }).then((result) => {
         $('#university').empty();
-        $('#university').append('<option>== Select University ==</option>');
+        $('#university').append('<option value="" selected disabled>== Select University ==</option>');
         $.each(result.data, function (index, univ) {
             $('#university').append('<option value="' + univ.univ_Id + '">' + univ.univ_Name + '</option>');
         });
