@@ -3,6 +3,16 @@
     Layout = "~/Views/Shared/MainLayout.cshtml";
 }
 
+@section HeaderScript {
+    <script>
+        var isLoggedIn = localStorage.getItem('isLoggedIn');
+        if (!isLoggedIn) {
+            var currentUrl = window.location.href;
+            localStorage.setItem('redirectUrl', currentUrl);
+            window.location.href = '/login';
+        }
+    </script>
+}
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -113,4 +123,6 @@
 
 @section Script {
     <script src="~/Script/RegisterScript.js"></script>
+    <script src="~/Script/LoginScript.js"></script>
+
 }

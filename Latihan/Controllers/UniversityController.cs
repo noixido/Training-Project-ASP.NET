@@ -20,6 +20,17 @@ namespace Latihan.Controllers
         [HttpPost]
         public IActionResult addUniversity(University university)
         {
+
+            if (string.IsNullOrWhiteSpace(university.Univ_Name))
+            {
+                return BadRequest(new
+                {
+                    status = StatusCodes.Status400BadRequest,
+                    message = "University Name Cannot be Null",
+                    data = (object)null
+                });
+            }
+
             var addUniv = _universityRepository.addUniversity(university);
             if (addUniv > 0)
             {

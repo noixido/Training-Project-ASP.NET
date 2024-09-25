@@ -2,7 +2,16 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/MainLayout.cshtml";
 }
-
+@section HeaderScript {
+    <script>
+        var isLoggedIn = localStorage.getItem('isLoggedIn');
+        if (!isLoggedIn) {
+            var currentUrl = window.location.href;
+            localStorage.setItem('redirectUrl', currentUrl);
+            window.location.href = '/login';
+        }
+    </script>
+}
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -27,11 +36,12 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form id="univForm">
+                                        <form id="univForm" name="univForm" class="needs-validation" novalidate>
                                             <div class="card-body">
                                                 <div class="form-group">
                                                     <label for="univName">University Name</label>
-                                                    <input type="text" name="univName" class="form-control" id="univName" placeholder="Enter University Name" required>
+                                                    <input type="text" id="univName" name="univName" class="form-control" placeholder="Enter University Name" required>
+                                                    
                                                 </div>
                                             </div>
                                         </form>
@@ -40,7 +50,7 @@
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                         <div>
                                             <button id="modalEdit" type="button" class="btn btn-warning">Edit</button>
-                                            <button id="modalAdd" type="button" form="univForm" class="btn btn-primary" onclick="addUniv()">Simpan</button>
+                                            <button id="modalAdd" type="submit" form="univForm" class="btn btn-primary" onclick="addUniv()">Simpan</button>
                                         </div>
                                     </div>
                                 </div>
@@ -74,4 +84,6 @@
 
 @section Script {
     <script src="~/Script/UniversityScript.js"></script>
+    <script src="~/Script/LoginScript.js"></script>
+
 }

@@ -33,6 +33,18 @@ namespace Latihan.Repositories
                 .ToList();
         }
 
+        public IEnumerable<CountDegreeVM> GetCountDegree()
+        {
+            return _context.Educations
+                .GroupBy(e => e.Degree)
+                .Select(e => new CountDegreeVM
+                {
+                    Degree = e.Key.ToString(),
+                    Count = e.Count()
+                })
+                .ToList();
+        }
+
         public RegisterVM lastInsertedEmpData()
         {
             var lastEmpInserted = _context.Employees
@@ -68,13 +80,13 @@ namespace Latihan.Repositories
                 .FirstOrDefault(x => x.Employee.Email == loginVM.Username);
             if (acc == null)
             {
-                throw new Exception("Email is Invalid");
+                throw new Exception("Email is invalid!");
             }
 
             var checkPass = BCrypt.Net.BCrypt.Verify(loginVM.Password, acc.Password);
             if (!checkPass)
             {
-                throw new Exception("Try Again!");
+                throw new Exception("Password is incorrect!");
             }
             return true;
         }

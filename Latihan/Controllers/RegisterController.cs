@@ -105,5 +105,28 @@ namespace Latihan.Controllers
                 });
             }
         }
+
+        [HttpGet("countDegree")]
+        public IActionResult GetCountDegree()
+        {
+            var countDegree = _repository.GetCountDegree();
+            if(countDegree.Count() == 0)
+            {
+                return NotFound(new
+                {
+                    status = StatusCodes.Status404NotFound,
+                    message = "Data Not Found",
+                    data = (object)countDegree
+                });
+            }
+
+            var data = countDegree.ToDictionary(n => n.Degree, n => n.Count);
+            return Ok(new
+            {
+                status = StatusCodes.Status200OK,
+                message = "Data Found",
+                data = (object)data
+            });
+        }
     }
 }

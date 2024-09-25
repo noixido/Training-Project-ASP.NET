@@ -1,5 +1,4 @@
 ﻿$(document).ready(function () {
-
     $('#univTable').DataTable({
         "paging": true,
         "responsive": true,
@@ -38,6 +37,7 @@
 });
 
 function addUniv() {
+    //debugger;
     var univ = new Object();
     univ.univ_Name = $('#univName').val();
     $.ajax({
@@ -53,7 +53,7 @@ function addUniv() {
                     class: 'bg-success',
                     title: 'Success',
                     autohide: true,
-                    delay: 750,
+                    delay: 3000,
                     body: result.message
                 });
                 $('#univTable').DataTable().ajax.reload();
@@ -68,11 +68,22 @@ function addUniv() {
                 });
             }
         })
+        //.catch((e) => {
+        //    $(document).Toasts('create', {
+        //        class: 'bg-danger',
+        //        title: 'Error',
+        //        autohide: true,
+        //        delay: 12000,
+        //        body: e.responseJSON.message,
+        //    });
+        //    $('#modal-default').modal('show');
+        //})
 }
 
 function editUniv(id) {
     document.getElementById('modalEdit').style.display = "block";
     document.getElementById('modalAdd').style.display = "none";
+    $('#univForm').find('.is-invalid').removeClass('is-invalid');
 
     $.ajax({
         url: "https://localhost:7294/api/University/" + id,
@@ -105,7 +116,7 @@ function edit(id) {
                 class: 'bg-success',
                 title: 'Success',
                 autohide: true,
-                delay: 750,
+                delay: 3000,
                 body: result.message
             });
             $('#univTable').DataTable().ajax.reload();
@@ -136,7 +147,7 @@ function deleteUniv(id) {
                     class: 'bg-success',
                     title: 'Success',
                     autohide: true,
-                    delay: 750,
+                    delay: 3000,
                     body: result.message
                 });
                 $('#univTable').DataTable().ajax.reload();
@@ -160,33 +171,40 @@ $(document).ajaxComplete(function () {
 document.getElementById('modalButton').addEventListener('click', function () {
     document.getElementById('modalEdit').style.display = "none";
     document.getElementById('modalAdd').style.display = "block";
-})
-
-$('#modal-default').on('hidden.bs.modal', function () {
+    $('#univForm').find('.is-invalid').removeClass('is-invalid');
     $("#univForm").trigger('reset');
 });
 
+$(function () {
+    $.validator.setDefaults({
+        submitHandler: function (e) {
+            $("#univForm").submit(function (e) {
+                e.preventDefault();
+            });
+        }
+    });
+    $('#univForm').validate({
+        rules: {
+            univName: {
+                required: true,
 
-$('#univForm').validate({
-    rules: {
-        univName: {
-            required: true,
+            },
         },
-    },
-    messages: {
-        univName: {
-            required: "Please enter a University Name",
+        messages: {
+            univName: {
+                required: "Please enter a university name"
+            },
         },
-    },
-    errorElement: 'span',
-    errorPlacement: function (error, element) {
-        error.addClass('invalid-feedback');
-        element.closest('.form-group').append(error);
-    },
-    highlight: function (element, errorClass, validClass) {
-        $(element).addClass('is-invalid');
-    },
-    unhighlight: function (element, errorClass, validClass) {
-        $(element).removeClass('is-invalid');
-    }
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('invalid-feedback');
+            element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        }
+    });
 });

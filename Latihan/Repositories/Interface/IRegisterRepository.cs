@@ -8,5 +8,7 @@ namespace Latihan.Repositories.Interface
         RegisterVM lastInsertedEmpData();
         IEnumerable<ShowDataVM> GetAllEmpData();
         bool Login(LoginVM loginVM);
+
+        IEnumerable<CountDegreeVM> GetCountDegree();
     }
 }

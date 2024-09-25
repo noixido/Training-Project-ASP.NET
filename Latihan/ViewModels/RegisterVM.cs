@@ -37,4 +37,10 @@ namespace Latihan.ViewModels
         public float? GPA { get; set; }
         public string? Univ_Name { get; set; }
     }
+
+    public class CountDegreeVM
+    {
+        public string? Degree { get; set; }
+        public int? Count { get; set; }
+    }
 }
