@@ -23,6 +23,23 @@
     @* <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> *@
     <link href="~/adminlte-3.2.0/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="~/adminlte-3.2.0/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />
+
+    <script src="~/adminlte-3.2.0/plugins/jquery/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3/build/jwt-decode.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const token = localStorage.getItem("jwtToken"); 
+            if (token) {
+                const decodedToken = jwt_decode(token);
+                const username = decodedToken.fullName;
+
+                $("#yourName").text(username);
+            } else {
+                $("#yourName").text("Guest");
+            }
+        });
+    </script>
+
     @RenderSection("HeaderScript", required:false)
 </head>
 <body class="hold-transition sidebar-mini">
@@ -116,8 +133,21 @@
                 $('#' + '@ViewBag.data').addClass('menu-open');
             }
         });
+        $(document).ready(function(){
+            var data = localStorage.getItem('data');
+            if (data) {
+                var parsedData = JSON.parse(data);
+                var roles = parsedData.role;
 
-
+                if (roles == "Admin") {
+                    document.getElementById('adminMenu').style.display = "block";
+                    document.getElementById('employeeMenu').style.display = "none";
+                } else {
+                    document.getElementById('adminMenu').style.display = "none";
+                    document.getElementById('employeeMenu').style.display = "block";
+                }
+            }
+        });
     </script>
 
     @RenderSection("Script")

@@ -3,6 +3,10 @@ using Latihan.Models;
 using Latihan.Repositories.Interface;
 using Latihan.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Latihan.Repositories
 {
@@ -13,6 +17,31 @@ namespace Latihan.Repositories
         public RegisterRepository(MyContext context)
         {
             _context = context;
+        }
+
+        public int changePassword(ChangePassVM changePassVM)
+        {
+            var emp = GetEmployeeByEmail(changePassVM.Email);
+            if (emp == null)
+            {
+                throw new Exception("Employee not found!");
+            }
+
+            var userPass = _context.Accounts
+                .Where(a => a.NIK == emp.NIK)
+                .FirstOrDefault();
+
+            var checkPass = BCrypt.Net.BCrypt.Verify(changePassVM.OldPassword, userPass.Password);
+            if (!checkPass)
+            {
+                throw new Exception("Old Password is Incorrect");
+            }
+
+            userPass.Password = BCrypt.Net.BCrypt.HashPassword(changePassVM.NewPassword);
+
+            //_context.Entry(userPass).State = EntityState.Detached;
+            _context.Entry(userPass).State = EntityState.Modified;
+            return _context.SaveChanges();
         }
 
         public IEnumerable<ShowDataVM> GetAllEmpData()
@@ -29,8 +58,14 @@ namespace Latihan.Repositories
                     Degree = a.Account.Profiling.Education.Degree.ToString(),
                     GPA = a.Account.Profiling.Education.GPA,
                     Univ_Name = a.Account.Profiling.Education.University.Univ_Name,
+                    //RoleName = accRole.Role.RoleName
+                    RoleName = _context.AccountRoles
+                            .Include(r => r.Role)
+                            .Where(ar => ar.NIK == a.NIK)
+                            .Select(ar => ar.Role.RoleName)
+                            .FirstOrDefault()
                 })
-                .ToList();
+                            .ToList();
         }
 
         public IEnumerable<CountDegreeVM> GetCountDegree()
@@ -45,11 +80,82 @@ namespace Latihan.Repositories
                 .ToList();
         }
 
+        public ShowDataVM GetEmpByEmail(string email)
+        {
+            var emp = _context.Employees.Where(e => e.Email == email).FirstOrDefault();
+            return _context.AccountRoles
+                .Include(r => r.Role)
+                .Include(e => e.Account.Profiling.Education.University)
+                .Where(ar => ar.NIK == emp.NIK)
+                .Select(a => new ShowDataVM
+                {
+                    NIK = emp.NIK,
+                    FullName = emp.FirstName + " " + emp.LastName,
+                    Phone = emp.Phone,
+                    Email = emp.Email,
+                    BirthDate = emp.BirthDate.Value.ToString("dd-MM-yyyy") ?? string.Empty,
+                    Degree = a.Account.Profiling.Education.Degree.ToString(),
+                    GPA = a.Account.Profiling.Education.GPA,
+                    Univ_Name = a.Account.Profiling.Education.University.Univ_Name,
+                    RoleName = a.Role.RoleName,
+                })
+                .FirstOrDefault();
+        }
+
+        public UpdateProfileVM GetEmployeeByEmail(string email)
+        {
+            var emp = _context.Employees.Where(e => e.Email == email).FirstOrDefault();
+            return _context.AccountRoles
+                .Include(r => r.Role)
+                .Include(e => e.Account.Profiling.Education.University)
+                .Where(ar => ar.NIK == emp.NIK)
+                .Select(a => new UpdateProfileVM
+                {
+                    NIK = emp.NIK,
+                    FirstName = emp.FirstName,
+                    LastName = emp.LastName,
+                    Phone = emp.Phone,
+                    Email = emp.Email,
+                    BirthDate = emp.BirthDate,
+                    Degree = a.Account.Profiling.Education.Degree.ToString(),
+                    GPA = a.Account.Profiling.Education.GPA,
+                    Univ_Id = a.Account.Profiling.Education.University.Univ_Id,
+                    RoleId = a.Role.RoleId,
+                })
+                .FirstOrDefault();
+        }
+
+        public PayloadVM GetPayload(string email)
+        {
+            var emp = _context.Employees
+                .Where(e => e.Email == email)
+                .FirstOrDefault();
+            var payload = _context.AccountRoles
+                .Include(r => r.Role)
+                .Where(n => n.NIK == emp.NIK)
+                .FirstOrDefault();
+            if (payload == null)
+            {
+                throw new Exception("Data not Found");
+            }
+            return new PayloadVM
+            {
+                Username = email,
+                FullName = emp.FirstName + " " + emp.LastName,
+                Roles = payload.Role.RoleName
+            };
+        }
+
         public RegisterVM lastInsertedEmpData()
         {
             var lastEmpInserted = _context.Employees
                 .Include(a => a.Account)
                 .OrderByDescending(e => e.NIK)
+                .FirstOrDefault();
+            var lastAccRoleInserted = _context.AccountRoles
+                .Include(a => a.Account)
+                .Include(r => r.Role)
+                .Where(ar => ar.Account.NIK == lastEmpInserted.NIK)
                 .FirstOrDefault();
             var lastEduInserted = _context.Educations
                 .Include(u => u.University)
@@ -69,12 +175,15 @@ namespace Latihan.Repositories
                 Email = lastEmpInserted.Email,
                 Degree = lastEduInserted.Degree.ToString(),
                 GPA = lastEduInserted.GPA,
-                Univ_Id = lastEduInserted.University_Id
+                Univ_Id = lastEduInserted.University_Id,
+                RoleId = lastAccRoleInserted.RoleId
             };
         }
 
         public bool Login(LoginVM loginVM)
         {
+
+            
             var acc = _context.Accounts
                 .Include(e => e.Employee)
                 .FirstOrDefault(x => x.Employee.Email == loginVM.Username);
@@ -137,6 +246,17 @@ namespace Latihan.Repositories
 
             _context.Accounts.Add(account);
 
+
+            var theRole = _context.Roles
+                .Where(r => r.RoleName.ToLower() == "Employee".ToLower())
+                .FirstOrDefault();
+
+            AccountRole accRole = new AccountRole();
+            accRole.NIK = account.NIK;
+            accRole.RoleId = theRole.RoleId;
+
+            _context.AccountRoles.Add(accRole);
+
             Education education = new Education();
 
             var lastEduRecord = _context.Educations.Max(u => u.Education_Id);
@@ -188,6 +308,59 @@ namespace Latihan.Repositories
 
             _context.Profilings.Add(profiling);
 
+            return _context.SaveChanges();
+        }
+
+        public int updateEmployee(UpdateProfileVM? updateProfileVM)
+        {
+            if(updateProfileVM == null)
+            {
+                throw new Exception("Fail!");
+            }
+
+            var emp = _context.Employees
+                .Where(e => e.Email == updateProfileVM.Email)
+                .FirstOrDefault();
+            if(emp != null)
+            {
+                emp.FirstName = updateProfileVM.FirstName;
+                emp.LastName = updateProfileVM.LastName;
+                emp.Phone = updateProfileVM.Phone;
+                emp.Email = updateProfileVM.Email;
+                emp.BirthDate = updateProfileVM.BirthDate;
+                _context.Entry(emp).State = EntityState.Modified;
+            }
+
+            var prof = _context.Profilings.SingleOrDefault(p => p.NIK == emp.NIK);
+            var eduId = prof.Education_Id;
+            var edu = _context.Educations.SingleOrDefault(e => e.Education_Id == eduId);
+            if(edu != null)
+            {
+                switch (updateProfileVM.Degree)
+                {
+                    case "D3":
+                        edu.Degree = Degree.D3;
+                        break;
+                    case "D4":
+                        edu.Degree = Degree.D4;
+                        break;
+                    case "S1":
+                        edu.Degree = Degree.S1;
+                        break;
+                    case "S2":
+                        edu.Degree = Degree.S2;
+                        break;
+                    case "S3":
+                        edu.Degree = Degree.S3;
+                        break;
+                    default:
+                        throw new Exception("Degree is Invalid");
+                }
+                //edu.Degree = updateProfileVM.Degree;
+                edu.GPA = updateProfileVM.GPA;
+                edu.University_Id = updateProfileVM.Univ_Id;
+                _context.Entry(edu).State = EntityState.Modified;
+            }
             return _context.SaveChanges();
         }
     }

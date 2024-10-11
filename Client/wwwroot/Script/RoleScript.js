@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    $('#univTable').DataTable({
+    $('#roleTable').DataTable({
         "paging": true,
         "responsive": true,
         "lengthChange": true,
@@ -9,7 +9,7 @@
         "autoWidth": false,
         "processing": true,
         "ajax": {
-            url: "https://localhost:7294/api/University",
+            url: "https://localhost:7294/api/Role",
             type: "GET",
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem("jwtToken")
@@ -27,29 +27,29 @@
                     return meta.row + meta.settings._iDisplayStart + 1;
                 }
             },
-            { "data": "univ_Id" },
-            { "data": "univ_Name" },
+            { "data": "roleId" },
+            { "data": "roleName" },
             {
                 "render": function (data, type, row) {
-                    return '<div style="display:flex; justify-content:center; gap:5px;"><button type="button" id="editUniv" class="btn btn-warning" data-tooltip="tooltip" data-placement="top" title="Edit Data" onclick="editUniv(\'' + row.univ_Id + '\')" data-toggle="modal" data-target="#modal-default"> <i class="fas fa-pencil-alt"></i></button > ' +
-                        ' | <button type="button" id="deleteUniv" class="btn btn-danger" data-tooltip="tooltip" data-placement="top" title="Delete Data" onclick="deleteUniv(\'' + row.univ_Id + '\')"><i class="fas fa-trash"></i></button></div > ';
+                    return '<div style="display:flex; justify-content:center; gap:5px;"><button type="button" id="editRole" class="btn btn-warning" data-tooltip="tooltip" data-placement="top" title="Edit Data" onclick="editRole(\'' + row.roleId + '\')" data-toggle="modal" data-target="#modal-default"> <i class="fas fa-pencil-alt"></i></button > ' +
+                        ' | <button type="button" id="deleteRole" class="btn btn-danger" data-tooltip="tooltip" data-placement="top" title="Delete Data" onclick="deleteRole(\'' + row.roleId + '\')"><i class="fas fa-trash"></i></button></div > ';
                 }
             }
         ]
     });
 });
 
-function addUniv() {
+function addRole() {
     //debugger;
-    var univ = new Object();
-    univ.univ_Name = $('#univName').val();
+    var role = new Object();
+    role.roleName = $('#roleName').val();
     $.ajax({
-        url: "https://localhost:7294/api/University",
+        url: "https://localhost:7294/api/Role",
         type: "POST",
         headers: {
             "Authorization": "Bearer " + localStorage.getItem("jwtToken")
         },
-        data: JSON.stringify(univ),
+        data: JSON.stringify(role),
         contentType: "application/json; charset=utf-8",
     })
         .then((result) => {
@@ -62,7 +62,7 @@ function addUniv() {
                     delay: 3000,
                     body: result.message
                 });
-                $('#univTable').DataTable().ajax.reload();
+                $('#roleTable').DataTable().ajax.reload();
                 $('#modal-default').modal('hide');
             } else {
                 //alert(result.message);
@@ -74,25 +74,15 @@ function addUniv() {
                 });
             }
         })
-        //.catch((e) => {
-        //    $(document).Toasts('create', {
-        //        class: 'bg-danger',
-        //        title: 'Error',
-        //        autohide: true,
-        //        delay: 12000,
-        //        body: e.responseJSON.message,
-        //    });
-        //    $('#modal-default').modal('show');
-        //})
 }
 
-function editUniv(id) {
+function editRole(id) {
     document.getElementById('modalEdit').style.display = "block";
     document.getElementById('modalAdd').style.display = "none";
-    $('#univForm').find('.is-invalid').removeClass('is-invalid');
+    $('#roleForm').find('.is-invalid').removeClass('is-invalid');
 
     $.ajax({
-        url: "https://localhost:7294/api/University/" + id,
+        url: "https://localhost:7294/api/Role/" + id,
         type: "GET",
         headers: {
             "Authorization": "Bearer " + localStorage.getItem("jwtToken")
@@ -101,7 +91,7 @@ function editUniv(id) {
         dataType: "json",
     }).then((result) => {
         var obj = result.data;
-        $('#univName').val(obj.univ_Name);
+        $('#roleName').val(obj.roleName);
 
         var btn = $('#modalEdit');
         btn.attr('onclick', 'edit(\'' + id + '\')');
@@ -111,15 +101,15 @@ function editUniv(id) {
 }
 
 function edit(id) {
-    var univ = new Object();
-    univ.univ_Name = $('#univName').val();
+    var role = new Object();
+    role.roleName = $('#roleName').val();
     $.ajax({
-        url: "https://localhost:7294/api/University/" + id,
+        url: "https://localhost:7294/api/Role/" + id,
         type: "PUT",
         headers: {
             "Authorization": "Bearer " + localStorage.getItem("jwtToken")
         },
-        data: JSON.stringify(univ),
+        data: JSON.stringify(role),
         contentType: "application/json; charset=utf-8",
     }).then((result) => {
         if (result.status == 200) {
@@ -131,7 +121,7 @@ function edit(id) {
                 delay: 3000,
                 body: result.message
             });
-            $('#univTable').DataTable().ajax.reload();
+            $('#roleTable').DataTable().ajax.reload();
             $('#modal-default').modal('hide');
         } else {
             //alert(result.message);
@@ -145,11 +135,11 @@ function edit(id) {
     });
 }
 
-function deleteUniv(id) {
+function deleteRole(id) {
 
     Swal.fire({
         title: "Are you sure?",
-        text: "This University will be deleted forever!",
+        text: "This Role will be deleted forever!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -158,7 +148,7 @@ function deleteUniv(id) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: "https://localhost:7294/api/University/" + id,
+                url: "https://localhost:7294/api/Role/" + id,
                 type: "DELETE",
                 headers: {
                     "Authorization": "Bearer " + localStorage.getItem("jwtToken")
@@ -174,7 +164,7 @@ function deleteUniv(id) {
                         delay: 3000,
                         body: result.message
                     });
-                    $('#univTable').DataTable().ajax.reload();
+                    $('#roleTable').DataTable().ajax.reload();
                 } else {
                     alert(result.message);
                 }
@@ -194,28 +184,28 @@ $(document).ajaxComplete(function () {
 document.getElementById('modalButton').addEventListener('click', function () {
     document.getElementById('modalEdit').style.display = "none";
     document.getElementById('modalAdd').style.display = "block";
-    $('#univForm').find('.is-invalid').removeClass('is-invalid');
-    $("#univForm").trigger('reset');
+    $('#roleForm').find('.is-invalid').removeClass('is-invalid');
+    $("#roleForm").trigger('reset');
 });
 
 $(function () {
     $.validator.setDefaults({
         submitHandler: function (e) {
-            $("#univForm").submit(function (e) {
+            $("#roleForm").submit(function (e) {
                 e.preventDefault();
             });
         }
     });
-    $('#univForm').validate({
+    $('#roleForm').validate({
         rules: {
-            univName: {
+            roleName: {
                 required: true,
 
             },
         },
         messages: {
-            univName: {
-                required: "Please enter a university name"
+            roleName: {
+                required: "Please enter a role name"
             },
         },
         errorElement: 'span',

@@ -1,13 +1,17 @@
 ﻿using Latihan.Models;
 using Latihan.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
+using System;
 
 namespace Latihan.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors("AllowOrigin")]
+    //[Authorize(Roles = "Admin")]
     public class UniversityController : Controller
     {
         private UniversityRepository _universityRepository;
@@ -56,6 +60,7 @@ namespace Latihan.Controllers
             });
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAllUniversities()
         {
@@ -74,6 +79,8 @@ namespace Latihan.Controllers
             {
                 status = StatusCodes.Status200OK,
                 message = "Data Found",
+                isAuthenticated = User.Identity.IsAuthenticated,
+                Roles = User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value),
                 data = (object)getAllUniv
             });
         }

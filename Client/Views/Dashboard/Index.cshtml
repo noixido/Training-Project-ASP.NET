@@ -5,7 +5,7 @@
 
 @section HeaderScript {
     <script>
-        var isLoggedIn = localStorage.getItem('isLoggedIn');
+        var isLoggedIn = localStorage.getItem('jwtToken');
         if (!isLoggedIn) {
             var currentUrl = window.location.href;
             localStorage.setItem('redirectUrl', currentUrl);

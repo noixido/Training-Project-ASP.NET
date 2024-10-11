@@ -1,4 +1,5 @@
-﻿@{
+﻿
+@{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/MainLayout.cshtml";
 }
@@ -21,7 +22,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">University DataTable</h3>
+                        <h3 class="card-title">Role DataTable</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -33,18 +34,17 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">University Modal</h4>
+                                        <h4 class="modal-title">Role Modal</h4>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form id="univForm" name="univForm" class="needs-validation" novalidate>
+                                        <form id="roleForm" name="roleForm" class="needs-validation" novalidate>
                                             <div class="card-body">
                                                 <div class="form-group">
-                                                    <label for="univName">University Name</label>
-                                                    <input type="text" id="univName" name="univName" class="form-control" placeholder="Enter University Name" required>
-
+                                                    <label for="roleName">Role Name</label>
+                                                    <input type="text" id="roleName" name="roleName" class="form-control" placeholder="Enter Role Name" required>
                                                 </div>
                                             </div>
                                         </form>
@@ -53,7 +53,7 @@
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                         <div>
                                             <button id="modalEdit" type="button" class="btn btn-warning">Edit</button>
-                                            <button id="modalAdd" type="submit" form="univForm" class="btn btn-primary" onclick="addUniv()">Simpan</button>
+                                            <button id="modalAdd" type="submit" form="roleForm" class="btn btn-primary" onclick="addRole()">Simpan</button>
                                         </div>
                                     </div>
                                 </div>
@@ -62,12 +62,12 @@
                             <!-- /.modal-dialog -->
                         </div>
 
-                        <table id="univTable" class="table table-bordered table-striped">
+                        <table id="roleTable" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>University ID</th>
-                                    <th>University Name</th>
+                                    <th>Role ID</th>
+                                    <th>Role Name</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -86,7 +86,6 @@
 </section>
 
 @section Script {
-    <script src="~/Script/UniversityScript.js"></script>
+    <script src="~/Script/RoleScript.js"></script>
     <script src="~/Script/LoginScript.js"></script>
-
 }

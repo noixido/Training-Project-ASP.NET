@@ -24,7 +24,6 @@ $(function () {
             },
             phone: {
                 required: true,
-                range: [3, 15]
             },
             birthDate: {
                 required: true,
@@ -54,7 +53,6 @@ $(function () {
             },
             phone: {
                 required: "Phone Number is required!",
-                range: "Please enter a Phone number between 3 digits and 15 digits!"
             },
             birthDate: {
                 required: "Birth Date is required!",
@@ -102,6 +100,9 @@ $(document).ready(function () {
         "ajax": {
             url: "https://localhost:7294/api/Register",
             type: "GET",
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+            },
             dataType: "json",
             "datasrc": "data",
         },
@@ -124,6 +125,7 @@ $(document).ready(function () {
             { "data": "degree" },
             { "data": "gpa" },
             { "data": "univ_Name" },
+            { "data": "roleName" },
         ]
     });
 });
@@ -141,6 +143,9 @@ function addEmp(){
     $.ajax({
         url: "https://localhost:7294/api/Register",
         type: "POST",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+        },
         data: JSON.stringify(reg),
         contentType: "application/json; charset=utf-8",
     })
@@ -165,6 +170,9 @@ $(document).ready(function () {
     $.ajax({
         url: "https://localhost:7294/api/University",
         type: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+        },
         dataType: "json",
     }).then((result) => {
         $('#university').empty();

@@ -2,6 +2,9 @@
     return $.ajax({
         url: "https://localhost:7294/api/Register/countDegree",
         type: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+        },
         dataType: "json",
         "dataSrc": "data",
         //success: function (result) {

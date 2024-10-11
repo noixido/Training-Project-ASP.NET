@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Client.Controllers
 {
-    public class UniversityController : Controller
+    public class UserController : Controller
     {
+        [Route("employee")]
         public IActionResult Index()
         {
-            ViewBag.data = "UniversityActiveClass";
+            ViewBag.data = "EmployeeActiveClass";
             return View();
         }
     }

@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
 
 namespace Client.Controllers
 {
-    public class LoginController : Controller
+    public class RoleController : Controller
     {
         public IActionResult Index()
         {
+            ViewBag.data = "RoleActiveClass";
             return View();
         }
     }
